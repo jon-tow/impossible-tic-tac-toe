@@ -6,5 +6,5 @@ moves are decided via Minimax algorithm. ⭕️❌
 
 
 Recommended readings on Minimax Algorithm:
-- [Artificial Intelligence: A Modern Approach, Chapter 5. Adversarial Search] (https://www.amazon.com/Artificial-Intelligence-Modern-Approach-3rd/dp/0136042597) 
+- [Artificial Intelligence: A Modern Approach, Chapter 5. Adversarial Search](https://www.amazon.com/Artificial-Intelligence-Modern-Approach-3rd/dp/0136042597) 
 - [Minimax (wiki)](https://en.wikipedia.org/wiki/Minimax)
