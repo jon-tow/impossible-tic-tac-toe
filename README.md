@@ -1,5 +1,6 @@
 # impossible-tic-tac-toe
 ![Impossible Tic-Tac-Toe](impossible-tic-tac-toe.png)
+
 A simple vanilla-js tic-tac-toe application containing a computer opponent who's 
 moves are decided via Minimax algorithm.
 
