@@ -175,18 +175,18 @@
   <script type="text/javascript">
 
     // Grid size for classic 3 x 3 tic-tac-toe, and marker for empty cells.
-    const ROWS = 3;
-    const COLUMNS = 3;
-    const NCELLS = ROWS * COLUMNS;
-    const EMPTY = '';
+    const ROWS   = 3;
+    const COLS   = 3;
+    const NCELLS = ROWS * COLS;
+    const EMPTY  = '';
 
     // Short helper functions.
-    const get = (id) => document.getElementById(id);
+    const get      = (id) => document.getElementById(id);
     const queryAll = (selector) => document.querySelectorAll(selector);
 
     // Global objects to be used throughout play of tic-tac-toe.
     var human = { symbol: 'X', };
-    var cpu = { symbol: 'O', };
+    var cpu   = { symbol: 'O', };
     var gameState = {
       playerTurn: human,
       board: [
@@ -213,7 +213,7 @@
      * initBoardHandler() :: void -> void
      *
      * Assigns an event handler to each cell of the tic-tac-toe board table which
-     * provide users a way to mark their moves.
+     * provide users a way to mark their moves.      
      */
     function initBoardHandler() {
       let cells = queryAll('table td');
@@ -324,7 +324,7 @@
         return getTerminalPayoff(state, depth);
       }
       let payoff = Infinity;
-      let moves = findCandidateMoves(state);
+      let moves  = findCandidateMoves(state);
       for (let move of moves) {
         payoff = Math.min(payoff, maxValue(result(state, move), depth + 1));
       }
@@ -415,7 +415,7 @@
      * Check for a COLUMN-wise win across the tic-tac-toe board.
      */
     function isColumnWin(board) {
-      for (let i = 0; i < COLUMNS; i++) {
+      for (let i = 0; i < COLS; i++) {
         if (board[i] !== EMPTY
           && board[i] === board[i + 3]
           && board[i] === board[i + 6]) {
@@ -485,9 +485,9 @@
       let alertLabel = get('alert-label');
       alertLabel.innerHTML = alertMsg;
     }
-    function renderMove(board, move, cellElement, symbol, color) {
-      cellElement.style.color = color;
-      cellElement.innerHTML = symbol;
+    function renderMove(board, move, cellNode, symbol, color) {
+      cellNode.style.color = color;
+      cellNode.innerHTML = symbol;
       board[move] = symbol;
     }
 
