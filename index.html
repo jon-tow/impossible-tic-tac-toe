@@ -9,7 +9,8 @@
   <style>
     :root {
       --main-color: rgb(97, 55, 248);
-      --tertiary-color: rgb(238, 238, 238);
+      --secondary-color: rgb(238, 238, 238);
+      --text-color: rgb(85, 84, 84);
       --inner-shadow: inset 0 0 8px rgba(51, 45, 41, 0.3);
       --outer-shadow: 0 1px 8px rgba(51, 45, 41, 0.4);
       --background-color: #F8F8F8;
@@ -20,11 +21,11 @@
     }
 
     body {
-      height: 100vh;
       margin: 0 auto;
       width: 100%;
+      height: 100vh;
       font-family: 'Avenir', 'Helvetica', sans-serif;
-      color: rgb(85, 84, 84);
+      color: var(--text-color);
       background-color: white;
     }
 
@@ -32,15 +33,15 @@
       outline: 0;
     }
 
-    .game-div {
-      border-radius: 5px;
+    .game-div {     
       display: grid;
       grid-template-rows: 15% 10% 50% 25%;
       grid-auto-rows: minmax(120px, auto);
       justify-content: center;
-      align-items: center;
-      height: 100%;
+      align-items: center;           
       width: 100%;
+      height: 100%;
+      border-radius: 5px;
     }
 
     .title-div {
@@ -76,9 +77,9 @@
     }
 
     .board-table {
-      border-collapse: collapse;
       height: 100%;
       width: 100%;
+      border-collapse: collapse;
     }
 
     .board-table td {
@@ -108,20 +109,20 @@
       height: 100%;
     }
 
-    .restart-game-btn {
+    .restart-game-btn {    
+      display: block;
+      border-radius: 5px;
+      width: 100%;
+      height: 70px;
       background-color: white;
       color: var(--main-color);
       border: none;
       font-size: 1.2em;
-      border-radius: 5px;
-      width: 100%;
-      height: 70px;
-      display: block;
       text-transform: uppercase;
     }
 
     .restart-game-btn:active {
-      background-color: var(--tertiary-color);
+      background-color: var(--secondary-color);
       box-shadow: var(--inner-shadow);
     }
 
