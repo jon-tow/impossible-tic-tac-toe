@@ -11,9 +11,10 @@
       --main-color: rgb(97, 55, 248);
       --secondary-color: rgb(238, 238, 238);
       --text-color: rgb(85, 84, 84);
+      --background-color: #F8F8F8;      
       --inner-shadow: inset 0 0 8px rgba(51, 45, 41, 0.3);
       --outer-shadow: 0 1px 8px rgba(51, 45, 41, 0.4);
-      --background-color: #F8F8F8;
+      --board-border: 4px solid rgb(122, 98, 255);
     }
 
     html {
@@ -126,16 +127,20 @@
       box-shadow: var(--inner-shadow);
     }
 
-    .restart-game-btn:hover {
-      box-shadow: var(--inner-shadow);
+    .right-cell-border {
+      border-right: var(--board-border);
     }
+    .bottom-cell-border {
+      border-bottom: var(--board-border);
+    }
+
   </style>
 </head>
 
 <body>
 
   <!-- Impossible Tic-Tac-Toe Layout. -->
-  <div class="game-div" id="game">
+  <div class="game-div">
     <div class="title-div">
       <h1 id="title">Impossible Tic-Tac-Toe</h1>
     </div>
@@ -143,24 +148,20 @@
       <h1 id="alert-label"></h1>
     </div>
     <div class="board-div">
-      <table class="board-table" id="board-table">
+      <table class="board-table">
         <tr>
-          <td style="border-right: 4px solid rgb(122, 98, 255);
-                      border-bottom: 4px solid rgb(122, 98, 255)"></td>
-          <td style="border-right: 4px solid rgb(122, 98, 255);
-                      border-bottom: 4px solid rgb(122, 98, 255)"></td>
-          <td style="border-bottom: 4px solid rgb(122, 98, 255);"></td>
+          <td class="bottom-cell-border right-cell-border"></td>
+          <td class="bottom-cell-border right-cell-border"></td>
+          <td class="bottom-cell-border"></td>
         </tr>
         <tr>
-          <td style="border-right: 4px solid rgb(122, 98, 255);
-                      border-bottom: 4px solid rgb(122, 98, 255)"></td>
-          <td style="border-right: 4px solid rgb(122, 98, 255);
-                      border-bottom: 4px solid rgb(122, 98, 255)"></td>
-          <td style="border-bottom: 4px solid rgb(122, 98, 255);"></td>
+            <td class="bottom-cell-border right-cell-border"></td>
+            <td class="bottom-cell-border right-cell-border"></td>
+            <td class="bottom-cell-border"></td>
         </tr>
         <tr>
-          <td style="border-right: 4px solid rgb(122, 98, 255);"></td>
-          <td style="border-right: 4px solid rgb(122, 98, 255);"></td>
+          <td class="right-cell-border"></td>
+          <td class="right-cell-border"></td>
           <td></td>
         </tr>
       </table>
@@ -232,7 +233,9 @@
               gameAlert("YOU WIN!");
             } else {
               gameState.playerTurn = cpu;              
-            }
+            }         
+          }
+          if (gameState.playerTurn == cpu) {
             // Perform computer move.
             let bestMove = minimaxDecision(gameState);
             renderMove(gameState.board, bestMove, cells[bestMove], cpu.symbol, 'rgb(85, 84, 84)');
@@ -242,7 +245,7 @@
               gameAlert("YOU LOSE!");
             } else {
               gameState.playerTurn = human;  
-            }            
+            }   
           }
         };
         // Mark cell with a dim placeholder when it is being hovered over.
