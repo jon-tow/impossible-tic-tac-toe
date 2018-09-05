@@ -11,7 +11,7 @@
       --main-color: rgb(97, 55, 248);
       --secondary-color: rgb(238, 238, 238);
       --text-color: rgb(85, 84, 84);
-      --background-color: #F8F8F8;      
+      --background-color: #F8F8F8;
       --inner-shadow: inset 0 0 8px rgba(51, 45, 41, 0.3);
       --outer-shadow: 0 1px 8px rgba(51, 45, 41, 0.4);
       --board-border: 4px solid rgb(122, 98, 255);
@@ -34,12 +34,12 @@
       outline: 0;
     }
 
-    .game-div {     
+    .game-div {
       display: grid;
       grid-template-rows: 15% 10% 50% 25%;
       grid-auto-rows: minmax(120px, auto);
       justify-content: center;
-      align-items: center;           
+      align-items: center;
       width: 100%;
       height: 100%;
       border-radius: 5px;
@@ -110,7 +110,7 @@
       height: 100%;
     }
 
-    .restart-game-btn {    
+    .restart-game-btn {
       display: block;
       border-radius: 5px;
       width: 100%;
@@ -130,10 +130,10 @@
     .right-cell-border {
       border-right: var(--board-border);
     }
+
     .bottom-cell-border {
       border-bottom: var(--board-border);
     }
-
   </style>
 </head>
 
@@ -155,9 +155,9 @@
           <td class="bottom-cell-border"></td>
         </tr>
         <tr>
-            <td class="bottom-cell-border right-cell-border"></td>
-            <td class="bottom-cell-border right-cell-border"></td>
-            <td class="bottom-cell-border"></td>
+          <td class="bottom-cell-border right-cell-border"></td>
+          <td class="bottom-cell-border right-cell-border"></td>
+          <td class="bottom-cell-border"></td>
         </tr>
         <tr>
           <td class="right-cell-border"></td>
@@ -175,18 +175,18 @@
   <script type="text/javascript">
 
     // Grid size for classic 3 x 3 tic-tac-toe, and marker for empty cells.
-    const ROWS   = 3;
-    const COLS   = 3;
+    const ROWS = 3;
+    const COLS = 3;
     const NCELLS = ROWS * COLS;
-    const EMPTY  = '';
+    const EMPTY = '';
 
     // Short helper functions.
-    const get      = (id) => document.getElementById(id);
+    const get = (id) => document.getElementById(id);
     const queryAll = (selector) => document.querySelectorAll(selector);
 
     // Global objects to be used throughout play of tic-tac-toe.
     var human = { symbol: 'X', };
-    var cpu   = { symbol: 'O', };
+    var cpu = { symbol: 'O', };
     var gameState = {
       playerTurn: human,
       board: [
@@ -217,7 +217,7 @@
      */
     function initBoardHandler() {
       let cells = queryAll('table td');
-      for (let i = 0; i < NCELLS; i++) {        
+      for (let i = 0; i < NCELLS; i++) {
         // Perform user move followed by computer's counter move.
         cells[i].onclick = function () {
           // Ignore clicks on cell if the game is over.
@@ -232,8 +232,8 @@
             } else if (isGameOver(gameState)) {
               gameAlert("YOU WIN!");
             } else {
-              gameState.playerTurn = cpu;              
-            }         
+              gameState.playerTurn = cpu;
+            }
           }
           if (gameState.playerTurn == cpu) {
             // Perform computer move.
@@ -244,8 +244,8 @@
             } else if (isGameOver(gameState)) {
               gameAlert("YOU LOSE!");
             } else {
-              gameState.playerTurn = human;  
-            }   
+              gameState.playerTurn = human;
+            }
           }
         };
         // Mark cell with a dim placeholder when it is being hovered over.
@@ -324,7 +324,7 @@
         return getTerminalPayoff(state, depth);
       }
       let payoff = Infinity;
-      let moves  = findCandidateMoves(state);
+      let moves = findCandidateMoves(state);
       for (let move of moves) {
         payoff = Math.min(payoff, maxValue(result(state, move), depth + 1));
       }
@@ -371,8 +371,7 @@
     function getTerminalPayoff(state, depth) {
       let payoff = 0;
       let board = state.board;
-      const isWin = isRowWin(board) || isColumnWin(board) || isDiagonalWin(board);
-      if (isWin) {
+      if (isWin(board)) {
         const maxDepth = 9; // Max depth of gamestate tree (NEEDED TO MAKE CPU IMPOSSIBLE TO BEAT).        
         const winner = (state.playerTurn === human) ? cpu : human;
         payoff = (winner === cpu) ? (maxDepth - depth) : (-maxDepth - depth);
@@ -389,8 +388,16 @@
      */
     function isGameOver(state) {
       let board = state.board;
-      const isWin = isRowWin(board) || isColumnWin(board) || isDiagonalWin(board);
-      return isWin || isTie(state);
+      return isWin(board) || isTie(state);
+    }
+
+    /* 
+     * isWin(board) :: Object -> boolean
+     * 
+     * Returns true if there is a win on the board.
+     */
+    function isWin(board) {
+      return isRowWin(board) || isColumnWin(board) || isDiagonalWin(board);
     }
 
     /* 
@@ -431,13 +438,13 @@
      * Check for a DIAGONAL-wise win across the tic-tac-toe board.
      */
     function isDiagonalWin(board) {
-      return ((board[0] !== EMPTY              
-              && board[0] === board[4]
-              && board[0] === board[8])
-            ||
-              (board[2] !== EMPTY
-              && board[2] === board[4]
-              && board[2] === board[6]));
+      return ((board[0] !== EMPTY
+        && board[0] === board[4]
+        && board[0] === board[8])
+        ||
+        (board[2] !== EMPTY
+          && board[2] === board[4]
+          && board[2] === board[6]));
     }
 
     /* 
