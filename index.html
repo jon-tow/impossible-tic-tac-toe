@@ -42,7 +42,6 @@
       align-items: center;
       width: 100%;
       height: 100%;
-      border-radius: 5px;
     }
 
     .title-div {
@@ -110,7 +109,7 @@
       height: 100%;
     }
 
-    .restart-game-btn {
+    .restart-btn {
       display: block;
       border-radius: 5px;
       width: 100%;
@@ -122,7 +121,7 @@
       text-transform: uppercase;
     }
 
-    .restart-game-btn:active {
+    .restart-btn:active {
       background-color: var(--secondary-color);
       box-shadow: var(--inner-shadow);
     }
@@ -167,7 +166,7 @@
       </table>
     </div>
     <div class="restart-div">
-      <button class="restart-game-btn" id="restart-game-btn">RESTART GAME</button>
+      <button class="restart-btn" id="restart-btn">RESTART GAME</button>
     </div>
   </div>
 
@@ -185,8 +184,8 @@
     const queryAll = (selector) => document.querySelectorAll(selector);
 
     // Global objects to be used throughout play of tic-tac-toe.
-    var human = { symbol: 'X', };
-    var cpu = { symbol: 'O', };
+    var human = { sym: 'X', };
+    var cpu = { sym: 'O', };
     var gameState = {
       playerTurn: human,
       board: [
@@ -205,7 +204,7 @@
      * Initializes the necessary event handlers needed to play the game. 
      */
     function initImpossibleTicTacToe() {
-      initBoardHandler();
+      initBoardHandlers();
       initRestartGameHandler();
     }
 
@@ -215,7 +214,7 @@
      * Assigns an event handler to each cell of the tic-tac-toe board table which
      * provide users a way to mark their moves.      
      */
-    function initBoardHandler() {
+    function initBoardHandlers() {
       let cells = queryAll('table td');
       for (let i = 0; i < NCELLS; i++) {
         // Perform user move followed by computer's counter move.
@@ -225,26 +224,26 @@
             return;
           }
           if (gameState.playerTurn === human && gameState.board[i] === EMPTY) {
-            // Perform human move.    
-            renderMove(gameState.board, i, this, human.symbol, 'rgb(122, 98, 255)');
-            if (isGameOver(gameState) && isTie(gameState)) {
+            makeMove(gameState.board, i, human.sym);
+            renderMove(cells[i], human.sym, 'rgb(122, 98, 255)');
+            if (isTie(gameState.board)) {
               gameAlert("DRAW!");
-            } else if (isGameOver(gameState)) {
+            } else if (isWin(gameState.board)) {
               gameAlert("YOU WIN!");
             } else {
-              gameState.playerTurn = cpu;
+              switchTurns(gameState);
             }
           }
           if (gameState.playerTurn == cpu) {
-            // Perform computer move.
             let bestMove = minimaxDecision(gameState);
-            renderMove(gameState.board, bestMove, cells[bestMove], cpu.symbol, 'rgb(85, 84, 84)');
-            if (isGameOver(gameState) && isTie(gameState)) {
+            makeMove(gameState.board, bestMove, cpu.sym);
+            renderMove(cells[bestMove], cpu.sym, 'rgb(85, 84, 84)');
+            if (isTie(gameState.board)) {
               gameAlert("DRAW!");
-            } else if (isGameOver(gameState)) {
+            } else if (isWin(gameState.board)) {
               gameAlert("YOU LOSE!");
             } else {
-              gameState.playerTurn = human;
+              switchTurns(gameState);
             }
           }
         };
@@ -280,7 +279,7 @@
       let bestMove;                           // Cpu's best possible move. 
       let bestPayoff = -Infinity;             // Corresponding score of best move. 
       for (let move of moves) {
-        let payoff = minValue(result(state, move), 0);
+        let payoff = minVal(result(state, move), 0);
         if (payoff > bestPayoff) {
           bestPayoff = payoff;
           bestMove = move;
@@ -290,43 +289,43 @@
     }
 
     /* 
-     * maxValue(state, depth) :: (Object, Integer) -> Integer
+     * maxVal(state, depth) :: (Object, Integer) -> Integer
      *  
      * Go through the whole game tree, all the way to the leaves (with help from 
-     * minValue defined below), to determine the backed-up value of a state.
+     * minVal defined below), to determine the backed-up value of a state.
      * 
      * Note: The depth arg is used to count how far down the game tree we go
      *       before we reach a leaf. The earlier we reach a leaf, the better.
      */
-    function maxValue(state, depth) {
+    function maxVal(state, depth) {
       if (isGameOver(state)) {
         return getTerminalPayoff(state, depth);
       }
       let payoff = -Infinity;
       let moves = findCandidateMoves(state);
       for (let move of moves) {
-        payoff = Math.max(payoff, minValue(result(state, move), depth + 1));
+        payoff = Math.max(payoff, minVal(result(state, move), depth + 1));
       }
       return payoff;
     }
 
     /* 
-     * minValue(state, depth) :: (Object, Integer) -> Integer
+     * minVal(state, depth) :: (Object, Integer) -> Integer
      *  
      * Go through the entire game tree, all the way to the leaves (helped by 
-     * maxValue defined above), to determine the backed-up value of a state.
+     * maxVal defined above), to determine the backed-up value of a state.
      * 
      * Note: The depth arg is used to count how far down the game tree we go
      *       before we reach a leaf. The earlier we reach a leaf, the better.
      */
-    function minValue(state, depth) {
+    function minVal(state, depth) {
       if (isGameOver(state)) {
         return getTerminalPayoff(state, depth);
       }
       let payoff = Infinity;
       let moves = findCandidateMoves(state);
       for (let move of moves) {
-        payoff = Math.min(payoff, maxValue(result(state, move), depth + 1));
+        payoff = Math.min(payoff, maxVal(result(state, move), depth + 1));
       }
       return payoff;
     }
@@ -339,10 +338,10 @@
      */
     function findCandidateMoves(state) {
       let candidateMoves = [];
-      const boardIterator = state.board.entries();
-      for (let cell of boardIterator) {
-        const value = cell[1];
-        if (value == EMPTY) {
+      const boardIter = state.board.entries();
+      for (let cell of boardIter) {
+        const val = cell[1];
+        if (val == EMPTY) {
           const idx = cell[0];
           candidateMoves.push(idx);
         }
@@ -357,11 +356,11 @@
      */
     function result(state, move) {
       let movedState = JSON.parse(JSON.stringify(state));
-      movedState.board[move] = state.playerTurn.symbol; // Mark the move on the board.
-      movedState.playerTurn = state.playerTurn === human ? cpu : human;  // Alternate turns. 
+      movedState.playerTurn = state.playerTurn;
+      makeMove(movedState.board, move, state.playerTurn.sym);
+      switchTurns(movedState);
       return movedState;
     }
-
     /* 
      * getTerminalPayoff(state, depth) :: (Object, Integer) -> Integer
      * 
@@ -370,41 +369,27 @@
      */
     function getTerminalPayoff(state, depth) {
       let payoff = 0;
-      let board = state.board;
+      const board = state.board;
       if (isWin(board)) {
         const maxDepth = 9; // Max depth of gamestate tree (NEEDED TO MAKE CPU IMPOSSIBLE TO BEAT).        
         const winner = (state.playerTurn === human) ? cpu : human;
         payoff = (winner === cpu) ? (maxDepth - depth) : (-maxDepth - depth);
-      } else if (isTie(state)) {
+      } else if (isTie(board)) {
         payoff = 0 - depth;
       }
       return payoff;
     }
 
-    /* 
-     * isGameOver(state) :: Object -> boolean
-     * 
-     * Returns true if the game is completed via a win or tie.
-     */
+    // Game state helper functions.
     function isGameOver(state) {
-      let board = state.board;
-      return isWin(board) || isTie(state);
+      const board = state.board;
+      return isWin(board) || isTie(board);
     }
 
-    /* 
-     * isWin(board) :: Object -> boolean
-     * 
-     * Returns true if there is a win on the board.
-     */
     function isWin(board) {
       return isRowWin(board) || isColumnWin(board) || isDiagonalWin(board);
     }
 
-    /* 
-     * isRowWin(board) :: Object -> boolean
-     *
-     * Check for a ROW-wise win across the tic-tac-toe board.
-     */
     function isRowWin(board) {
       for (let i = 0; i <= NCELLS - 3; i += 3) {
         if (board[i] !== EMPTY
@@ -416,11 +401,6 @@
       return false;
     }
 
-    /* 
-     * isColumnWin(board) :: Object -> boolean
-     *
-     * Check for a COLUMN-wise win across the tic-tac-toe board.
-     */
     function isColumnWin(board) {
       for (let i = 0; i < COLS; i++) {
         if (board[i] !== EMPTY
@@ -432,55 +412,46 @@
       return false;
     }
 
-    /* 
-     * isDiagonalWin(board) :: Object -> boolean
-     *
-     * Check for a DIAGONAL-wise win across the tic-tac-toe board.
-     */
     function isDiagonalWin(board) {
-      return ((board[0] !== EMPTY
-        && board[0] === board[4]
-        && board[0] === board[8])
+      return (
+        (board[0] !== EMPTY
+          && board[0] === board[4]
+          && board[0] === board[8])
         ||
         (board[2] !== EMPTY
           && board[2] === board[4]
-          && board[2] === board[6]));
+          && board[2] === board[6])
+      );
     }
 
-    /* 
-     * isTie(state) :: Object -> boolean
-     *
-     * Check if the game has tied, that is no moves left.
-     */
-    function isTie(state) {
-      return findCandidateMoves(state).length === 0;
+    function isTie(board) {
+      const isBoardFull = !board.some((cell) => cell === EMPTY);
+      return isBoardFull && !isWin(board);
     }
 
-    /* 
-     * initRestartGameHandler(startingPlayer) :: Object -> void
-     *
-     * Assigns an event handler to the restart game button which will 
-     * provide users a way to restart games during or after they start
-     * a match.
-     */
+    function makeMove(board, cell, sym) {
+      if (cell < 0 || cell > (NCELLS - 1)) return;
+      board[cell] = sym;
+    }
+
+    function switchTurns(state) {
+      state.playerTurn = state.playerTurn === human ? cpu : human;
+    }
+
+    // Restart helper functions.
     function initRestartGameHandler(startingPlayer) {
-      let restartGameBtn = get('restart-game-btn');
-      restartGameBtn.onclick = restartGame;
+      let restartBtn = get('restart-btn');
+      restartBtn.onclick = restartGame;
     }
 
-    /*
-     * restartGame() :: void -> void
-     *
-     * Take all necessary actions to restart the tic-tac-toe game.
-     */
     function restartGame() {
       gameState.playerTurn = human;
       let alertLabel = get('alert-label');
-      alertLabel.innerHTML = "";
+      alertLabel.innerHTML = '';
       clearBoard();
     }
 
-    // GUI Helper functions.
+    // GUI helper functions.
     function clearBoard() {
       let cells = queryAll('table td');
       for (let i = 0; i < NCELLS; i++) {
@@ -488,20 +459,21 @@
         cells[i].innerHTML = EMPTY;
       }
     }
+
     function gameAlert(alertMsg) {
       let alertLabel = get('alert-label');
       alertLabel.innerHTML = alertMsg;
     }
-    function renderMove(board, move, cellNode, symbol, color) {
+
+    function renderMove(cellNode, sym, color) {
       cellNode.style.color = color;
-      cellNode.innerHTML = symbol;
-      board[move] = symbol;
+      cellNode.innerHTML = sym;
     }
 
     /* 
      * Test Minimax Decision. 
      */
-    // testMinimaxDecision();
+    //testMinimaxDecision();
     function testMinimaxDecision() {
       // Test 1.
       let testState1 = {
@@ -525,6 +497,16 @@
       }
       let bestMove2 = minimaxDecision(testState2);
       console.log(bestMove1 === 8);
+      // Test 3.
+      let testState3 = {
+        playerTurn: cpu,
+        board: [
+          'O', 'O', 'X',
+          'X', 'O', 'X',
+          'X', 'X', 'O'
+        ],
+      }
+      console.log(isTie(testState3.board));
     }
   </script>
 
