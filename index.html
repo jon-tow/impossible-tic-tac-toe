@@ -187,7 +187,7 @@
     var human = { sym: 'X', };
     var cpu = { sym: 'O', };
     var gameState = {
-      playerTurn: human,
+      turn: human,
       board: [
         EMPTY, EMPTY, EMPTY,
         EMPTY, EMPTY, EMPTY,
@@ -223,7 +223,7 @@
           if (isGameOver(gameState)) {
             return;
           }
-          if (gameState.playerTurn === human && gameState.board[i] === EMPTY) {
+          if (gameState.turn === human && gameState.board[i] === EMPTY) {
             makeMove(gameState.board, i, human.sym);
             renderMove(cells[i], human.sym, 'rgb(122, 98, 255)');
             if (isTie(gameState.board)) {
@@ -234,7 +234,7 @@
               switchTurns(gameState);
             }
           }
-          if (gameState.playerTurn == cpu) {
+          if (gameState.turn == cpu) {
             let bestMove = minimaxDecision(gameState);
             makeMove(gameState.board, bestMove, cpu.sym);
             renderMove(cells[bestMove], cpu.sym, 'rgb(85, 84, 84)');
@@ -340,10 +340,10 @@
       let candidateMoves = [];
       const boardIter = state.board.entries();
       for (let cell of boardIter) {
-        const val = cell[1];
-        if (val == EMPTY) {
-          const idx = cell[0];
-          candidateMoves.push(idx);
+        const cellVal = cell[1];
+        if (cellVal == EMPTY) {
+          const move = cell[0];
+          candidateMoves.push(move);
         }
       }
       return candidateMoves;
@@ -356,11 +356,12 @@
      */
     function result(state, move) {
       let movedState = JSON.parse(JSON.stringify(state));
-      movedState.playerTurn = state.playerTurn;
-      makeMove(movedState.board, move, state.playerTurn.sym);
+      movedState.turn = state.turn;
+      makeMove(movedState.board, move, state.turn.sym);
       switchTurns(movedState);
       return movedState;
     }
+
     /* 
      * getTerminalPayoff(state, depth) :: (Object, Integer) -> Integer
      * 
@@ -372,7 +373,7 @@
       const board = state.board;
       if (isWin(board)) {
         const maxDepth = 9; // Max depth of gamestate tree (NEEDED TO MAKE CPU IMPOSSIBLE TO BEAT).        
-        const winner = (state.playerTurn === human) ? cpu : human;
+        const winner = (state.turn === human) ? cpu : human;
         payoff = (winner === cpu) ? (maxDepth - depth) : (-maxDepth - depth);
       } else if (isTie(board)) {
         payoff = 0 - depth;
@@ -435,7 +436,7 @@
     }
 
     function switchTurns(state) {
-      state.playerTurn = state.playerTurn === human ? cpu : human;
+      state.turn = state.turn === human ? cpu : human;
     }
 
     // Restart helper functions.
@@ -445,7 +446,7 @@
     }
 
     function restartGame() {
-      gameState.playerTurn = human;
+      gameState.turn = human;
       let alertLabel = get('alert-label');
       alertLabel.innerHTML = '';
       clearBoard();
@@ -477,7 +478,7 @@
     function testMinimaxDecision() {
       // Test 1.
       let testState1 = {
-        playerTurn: human,
+        turn: human,
         board: [
           'O', 'O', 'X',
           EMPTY, EMPTY, 'X',
@@ -488,7 +489,7 @@
       console.log(bestMove1 === 8);
       // Test 2.
       let testState2 = {
-        playerTurn: cpu,
+        turn: cpu,
         board: [
           'O', EMPTY, 'X',
           EMPTY, 'O', 'X',
@@ -499,7 +500,7 @@
       console.log(bestMove1 === 8);
       // Test 3.
       let testState3 = {
-        playerTurn: cpu,
+        turn: cpu,
         board: [
           'O', 'O', 'X',
           'X', 'O', 'X',
