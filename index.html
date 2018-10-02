@@ -23,7 +23,7 @@
 
     body {
       margin: 0 auto;
-      width: 100%;
+      width: 100vw;
       height: 100vh;
       font-family: 'Avenir', 'Helvetica', sans-serif;
       color: var(--text-color);
@@ -36,64 +36,68 @@
 
     .game-div {
       display: grid;
-      grid-template-rows: 15% 10% 50% 25%;
-      grid-auto-rows: minmax(120px, auto);
+      grid-auto-rows: auto;     
+      grid-template-areas: ". title-div title-div ."". alert-div alert-div ."". board-div board-div ."". restart-div restart-div ."; 
       justify-content: center;
       align-items: center;
-      width: 100%;
-      height: 100%;
+      height: 100vh;
     }
 
     .title-div {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-    }
-
-    .alert-div {
+      grid-area: title-div;
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
       width: 100%;
-      height: 100%;
+      height: 60px;      
+    }
+
+    .alert-div {
+      grid-area: alert-div;
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: center;
+      align-items: center;
+      height: 60px;      
+      width: 100%;      
       color: var(--main-color);
     }
 
     .board-div {
+      grid-area: board-div;
       display: flex;
-      flex-direction: row;
+      flex-flow: column wrap;
       justify-content: center;
       align-items: center;
       width: 100%;
-      height: 100%;
-      font-size: 1.6em;
       background-color: rgba(237, 234, 255, 0.822);
       -moz-box-shadow: var(--outer-shadow);
       -webkit-box-shadow: var(--outer-shadow);
       box-shadow: var(--outer-shadow);
     }
 
-    .board-table {
-      height: 100%;
+    .board-table {  
       width: 100%;
+      height: 50%;      
+      border-radius: 4px;
       border-collapse: collapse;
+      border-spacing: 0;
     }
 
     .board-table td {
-      width: 33%;
-      height: 33%;
+      width: 2.2em;
+      height: 2.2em;
       font-size: 2.2em;
       font-weight: 900;
-      text-align: center;
+      text-align: center;  
     }
 
     .board-table td:active {
       -moz-box-shadow: var(--inner-shadow);
       -webkit-box-shadow: var(--inner-shadow);
       box-shadow: var(--inner-shadow);
+      
     }
 
     .board-table td:hover {
@@ -101,12 +105,12 @@
     }
 
     .restart-div {
+      grid-area: restart-div;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      height: 100%;
     }
 
     .restart-btn {
@@ -144,7 +148,7 @@
       <h1 id="title">Impossible Tic-Tac-Toe</h1>
     </div>
     <div class="alert-div">
-      <h1 id="alert-label"></h1>
+      <h2 id="alert-label"></h2>
     </div>
     <div class="board-div">
       <table class="board-table">
