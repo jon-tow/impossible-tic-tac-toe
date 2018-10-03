@@ -4,7 +4,7 @@ A simple vanilla-js tic-tac-toe application containing a computer opponent who's
 moves are decided via Minimax algorithm.
 
 ## Screenshot
-![Impossible Tic-Tac-Toe](impossible-tic-tac-toe.png)
+![Impossible Tic-Tac-Toe](impossible-tic-tac-toe.gif)
 
 ## Built with
   * Vanilla-js
